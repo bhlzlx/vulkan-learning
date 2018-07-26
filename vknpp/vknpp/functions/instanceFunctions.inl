@@ -1,0 +1,31 @@
+#ifndef VULKAN_INSTANCE_API
+#define VULKAN_INSTANCE_API( func )
+#endif
+VULKAN_INSTANCE_API(vkEnumeratePhysicalDevices)
+VULKAN_INSTANCE_API(vkGetPhysicalDeviceProperties)
+VULKAN_INSTANCE_API(vkGetPhysicalDeviceFeatures)
+VULKAN_INSTANCE_API(vkGetPhysicalDeviceQueueFamilyProperties)
+VULKAN_INSTANCE_API(vkCreateDevice)
+VULKAN_INSTANCE_API(vkGetDeviceProcAddr)
+VULKAN_INSTANCE_API(vkDestroyInstance)
+
+// Tutorial 02
+VULKAN_INSTANCE_API(vkEnumerateDeviceExtensionProperties)
+VULKAN_INSTANCE_API(vkGetPhysicalDeviceSurfaceSupportKHR)
+VULKAN_INSTANCE_API(vkGetPhysicalDeviceSurfaceCapabilitiesKHR)
+VULKAN_INSTANCE_API(vkGetPhysicalDeviceSurfaceFormatsKHR)
+VULKAN_INSTANCE_API(vkGetPhysicalDeviceSurfacePresentModesKHR)
+VULKAN_INSTANCE_API(vkDestroySurfaceKHR)
+
+#if defined(VK_USE_PLATFORM_WIN32_KHR)
+VULKAN_INSTANCE_API(vkCreateWin32SurfaceKHR)
+#elif defined(VK_USE_PLATFORM_XCB_KHR)
+VULKAN_INSTANCE_API(vkCreateXcbSurfaceKHR)
+#elif defined(VK_USE_PLATFORM_XLIB_KHR)
+VULKAN_INSTANCE_API(vkCreateXlibSurfaceKHR)
+#endif
+
+// Tutorial 04
+VULKAN_INSTANCE_API(vkGetPhysicalDeviceMemoryProperties)
+
+#undef VULKAN_INSTANCE_API

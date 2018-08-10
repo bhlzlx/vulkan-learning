@@ -28,13 +28,18 @@ namespace clannad
 			VkSemaphore _cmdExecuted;
 			//
 			bool _needUpdateSwapchain = true;
+			//
+			VkCommandPool _commandPool;
+			std::vector<VkCommandBuffer> _vecCommandBuffer;
+			//
 			int _width;
 			int _height;
 		private:
-			View();
-			~View();
+			View() {}
+			~View() {}
 			bool _updateSwapchain();
 			bool _createSemaphore();
+			bool _createCommandPool();
 		public:
 			bool onResize( int _width, int _height );
 			bool begin();

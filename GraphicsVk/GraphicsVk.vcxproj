@@ -19,9 +19,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{767490D1-15A5-4D21-AAE9-0C81E32D5B33}</ProjectGuid>
+    <ProjectGuid>{16BB1228-430E-48CE-B28B-389AE5BC7DA9}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>GraphicsVk</RootNamespace>
+    <RootNamespace>GraphicsVK</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -70,9 +70,6 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(SolutionDir)VkApiLoader;$(SolutionDir)include;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IncludePath>$(SolutionDir)VkApiLoader;$(SolutionDir)include;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -141,6 +138,7 @@
   <ItemGroup>
     <ClInclude Include="DeviceVk.h" />
     <ClInclude Include="ViewVk.h" />
+    <ClInclude Include="XoGraphic.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DeviceVk.cpp" />

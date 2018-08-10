@@ -24,12 +24,15 @@
     <ClInclude Include="ViewVk.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="XoGraphic.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="DeviceVk.cpp">
+    <ClCompile Include="ViewVk.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="ViewVk.cpp">
+    <ClCompile Include="DeviceVk.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

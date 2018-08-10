@@ -42,11 +42,10 @@ namespace clannad
 			};
 			
 			VkDevice &device = _host->_id;
-			DeviceApi &api = _host->_api;
 
-			if (!api.vkCreateSemaphore(device, &semaphore_create_info, nullptr, &_imageAvail) == VK_SUCCESS)
+			if (!_host->vkCreateSemaphore(device, &semaphore_create_info, nullptr, &_imageAvail) == VK_SUCCESS)
 				return false;
-			if (!api.vkCreateSemaphore(device, &semaphore_create_info, nullptr, &_cmdExecuted) == VK_SUCCESS)
+			if (!_host->vkCreateSemaphore(device, &semaphore_create_info, nullptr, &_cmdExecuted) == VK_SUCCESS)
 				return false;
 			return true;
 		}
@@ -59,11 +58,9 @@ namespace clannad
 				VK_COMMAND_POOL_CREATE_TRANSIENT_BIT | VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT,                                              // VkCommandPoolCreateFlags     flags
 				_host->_graphicQueueFamily,                 // uint32_t                     queueFamilyIndex
 			};
-
-			DeviceApi& deviceApi = _host->_api;
 			VkDevice device = _host->_id;
 
-			if (deviceApi.vkCreateCommandPool(device, &cmdPoolCI, nullptr, &_commandPool) != VK_SUCCESS)
+			if (_host->vkCreateCommandPool(device, &cmdPoolCI, nullptr, &_commandPool) != VK_SUCCESS)
 			{
 				return false;
 			}
@@ -78,7 +75,6 @@ namespace clannad
 				return nullptr;
 			//
 			VkDevice &device = _host->_id;
-			DeviceApi &api = _host->_api;
 			_host->vkDeviceWaitIdle( device );
 			//
 			_swapchainCreateInfo.oldSwapchain = _swapchain;
@@ -87,25 +83,25 @@ namespace clannad
 				return false;
 			}
 			VkSwapchainKHR oldSwapchain = _swapchain;
-			if (api.vkCreateSwapchainKHR( device , &_swapchainCreateInfo, nullptr, &_swapchain) != VK_SUCCESS)
+			if (_host->vkCreateSwapchainKHR( device , &_swapchainCreateInfo, nullptr, &_swapchain) != VK_SUCCESS)
 			{
 				return false;
 			}
 			if (oldSwapchain != VK_NULL_HANDLE)
 			{
-				api.vkDestroySwapchainKHR(device, oldSwapchain, nullptr);
+				_host->vkDestroySwapchainKHR(device, oldSwapchain, nullptr);
 			}
 			// 获取swapchain上的纹理
 			uint32_t nImage = 0;
-			api.vkGetSwapchainImagesKHR(device, _swapchain, &nImage, nullptr);
+			_host->vkGetSwapchainImagesKHR(device, _swapchain, &nImage, nullptr);
 			if (!nImage)
 				return false;
 			_vecImages.resize(nImage);
-			api.vkGetSwapchainImagesKHR(device, _swapchain, &nImage, &_vecImages[0]);
+			_host->vkGetSwapchainImagesKHR(device, _swapchain, &nImage, &_vecImages[0]);
 			// 创建command buffers
 			if (_vecCommandBuffer.size())
 			{
-				api.vkFreeCommandBuffers(device, _commandPool, (uint32_t)_vecCommandBuffer.size(), &_vecCommandBuffer[0]);
+				_host->vkFreeCommandBuffers(device, _commandPool, (uint32_t)_vecCommandBuffer.size(), &_vecCommandBuffer[0]);
 			}
 			_vecCommandBuffer.resize(nImage);
 			//
@@ -117,7 +113,7 @@ namespace clannad
 				VK_COMMAND_BUFFER_LEVEL_PRIMARY,                // VkCommandBufferLevel         level
 				nImage                                    // uint32_t                     bufferCount
 			};
-			if ( api.vkAllocateCommandBuffers( device, &cmd_buffer_allocate_info, &_vecCommandBuffer[0]) != VK_SUCCESS)
+			if (_host->vkAllocateCommandBuffers( device, &cmd_buffer_allocate_info, &_vecCommandBuffer[0]) != VK_SUCCESS)
 			{
 				return false;
 			}
@@ -149,7 +145,7 @@ namespace clannad
 			}
 			//
 			uint32_t availImageIndex;
-			VkResult result = _host->_api.vkAcquireNextImageKHR( _host->_id, _swapchain, UINT64_MAX, _imageAvail, VK_NULL_HANDLE, &availImageIndex);
+			VkResult result = _host->vkAcquireNextImageKHR( _host->_id, _swapchain, UINT64_MAX, _imageAvail, VK_NULL_HANDLE, &availImageIndex);
 			switch (result)
 			{
 			case VK_SUCCESS:
@@ -212,14 +208,14 @@ namespace clannad
 
 
 
-			_host->_api.vkBeginCommandBuffer( commandBuffer, &beginInfo);
-			_host->_api.vkCmdPipelineBarrier(commandBuffer, VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT, 0, 0, nullptr, 0, nullptr, 1, &barrier_from_present_to_clear);
+			_host->vkBeginCommandBuffer( commandBuffer, &beginInfo);
+			_host->vkCmdPipelineBarrier(commandBuffer, VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT, 0, 0, nullptr, 0, nullptr, 1, &barrier_from_present_to_clear);
 
-			_host->_api.vkCmdClearColorImage(commandBuffer, image, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, &clear_color, 1, &image_subresource_range);
+			_host->vkCmdClearColorImage(commandBuffer, image, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, &clear_color, 1, &image_subresource_range);
 
-			_host->_api.vkCmdPipelineBarrier(commandBuffer, VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, 0, 0, nullptr, 0, nullptr, 1, &barrier_from_clear_to_present);
+			_host->vkCmdPipelineBarrier(commandBuffer, VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, 0, 0, nullptr, 0, nullptr, 1, &barrier_from_clear_to_present);
 
-			if (_host->_api.vkEndCommandBuffer(commandBuffer) != VK_SUCCESS)
+			if (_host->vkEndCommandBuffer(commandBuffer) != VK_SUCCESS)
 			{
 				//std::cout << "Could not record command buffers!" << std::endl;
 				return false;
@@ -239,7 +235,7 @@ namespace clannad
 				&_cmdExecuted            // const VkSemaphore           *pSignalSemaphores
 			};
 
-			if (_host->_api.vkQueueSubmit( _presentQueue, 1, &submit_info, VK_NULL_HANDLE) != VK_SUCCESS) {
+			if (_host->vkQueueSubmit( _presentQueue, 1, &submit_info, VK_NULL_HANDLE) != VK_SUCCESS) {
 				return false;
 			}
 
@@ -253,7 +249,7 @@ namespace clannad
 				&availImageIndex,                                 // const uint32_t              *pImageIndices
 				nullptr                                       // VkResult                    *pResults
 			};
-			result = _host->_api.vkQueuePresentKHR(_presentQueue, &present_info);
+			result = _host->vkQueuePresentKHR(_presentQueue, &present_info);
 
 			switch (result) {
 			case VK_SUCCESS:
@@ -275,12 +271,11 @@ namespace clannad
 				return false;
 			// get command queues
 			VkDevice &device = _host->_id;
-			DeviceApi &api = _host->_api;
 			//
 			const Instance& inst = GetVkInstance();
 			// 实际上在创建逻辑设备的时候这些队列都已经生成好，这里仅仅里取出来句柄
-			api.vkGetDeviceQueue(device, _host->_graphicQueueFamily, 0, &_graphicQueue);
-			api.vkGetDeviceQueue(device, _host->_presentQueueFamily, 0, &_presentQueue);
+			_host->vkGetDeviceQueue(device, _host->_graphicQueueFamily, 0, &_graphicQueue);
+			_host->vkGetDeviceQueue(device, _host->_presentQueueFamily, 0, &_presentQueue);
 			// 创建信号对象
 			_createSemaphore();
 			//

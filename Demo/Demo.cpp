@@ -75,7 +75,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	{
 		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
 		{
-			WndProc(msg.hwnd, msg.message, msg.wParam, msg.lParam);
+			//WndProc(msg.hwnd, msg.message, msg.wParam, msg.lParam);
 			// Process events
 			/*
 			switch (msg.message) {

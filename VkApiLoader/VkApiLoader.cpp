@@ -30,8 +30,11 @@ namespace clannad
 #endif
 		}
 
-		bool ApiLoader::CreateInstance(VkInstance& inst_, InstanceApi& api_)
+		bool ApiLoader::CreateInstance( Instance& inst_ )
 		{
+			VkInstance& instId = inst_._id;
+			InstanceApi& api = inst_.api;
+			//
 			uint32_t nExt = 0;
 			if (
 				( __globalApi.vkEnumerateInstanceExtensionProperties(nullptr, &nExt, nullptr) != VK_SUCCESS) ||
@@ -55,14 +58,14 @@ namespace clannad
 				printf("   %s : %u\n", ext.extensionName, ext.specVersion);
 			}
 			//
-			VkResult rst = __globalApi.vkCreateInstance(&defInstCreateInfo, DefaultAllocCallbacks, &inst_);
+			VkResult rst = __globalApi.vkCreateInstance(&defInstCreateInfo, DefaultAllocCallbacks, &inst_._id);
 			if (rst != VK_SUCCESS)
 			{
 				return false;
 			}
 			//
 			#define VULKAN_INSTANCE_API(api)\
-				if (!(api_.##api = (PFN_##api)__globalApi.vkGetInstanceProcAddr( inst_ , #api)))\
+				if (!(inst_.##api = (PFN_##api)__globalApi.vkGetInstanceProcAddr( inst_ , #api)))\
 				{\
 				  std::cout << "Could not load global level function: " << #api << "!" << std::endl;\
 				  return false;\
@@ -71,25 +74,25 @@ namespace clannad
 			return true;
 		}
 
-		bool ApiLoader::CreateDevice(const InstanceApi& _instApi, VkInstance _inst, size_t _preferedPD, DeviceLoadData& _device, DeviceApi& api_)
+		bool ApiLoader::CreateDevice(const Instance& _inst, size_t _preferedPD, DeviceLoadData& _device)
 		{
 			uint32_t nDevice = 0;
 			VkResult rst;
 			std::vector<VkPhysicalDevice>  phyDevices;
 			uint32_t availGraphicQueueFamily = -1;
-			rst = _instApi.vkEnumeratePhysicalDevices(_inst, &nDevice, nullptr);
+			rst = _inst.vkEnumeratePhysicalDevices( _inst, &nDevice, nullptr);
 			if (rst != VK_SUCCESS || nDevice == 0)
 			{
 				return false;
 			}
 			phyDevices.resize(nDevice);
-			rst = _instApi.vkEnumeratePhysicalDevices(_inst, &nDevice, &phyDevices[0]);
+			rst = _inst.vkEnumeratePhysicalDevices(_inst, &nDevice, &phyDevices[0]);
 			//
 			printf("\n ###### List of physical devices : ######\n");
 			for (auto& phyDevice : phyDevices)
 			{
 				VkPhysicalDeviceProperties props;
-				_instApi.vkGetPhysicalDeviceProperties(phyDevice, &props);
+				_inst.vkGetPhysicalDeviceProperties(phyDevice, &props);
 				printf("    #  %s", props.deviceName);
 			}
 			//
@@ -103,8 +106,8 @@ namespace clannad
 			//
 			VkPhysicalDeviceFeatures   features;
 			VkPhysicalDeviceProperties props;
-			_instApi.vkGetPhysicalDeviceFeatures(physicalDevice, &features);
-			_instApi.vkGetPhysicalDeviceProperties(physicalDevice, &props);
+			_inst.vkGetPhysicalDeviceFeatures(physicalDevice, &features);
+			_inst.vkGetPhysicalDeviceProperties(physicalDevice, &props);
 			uint32_t major_version = VK_VERSION_MAJOR(props.apiVersion);
 			uint32_t minor_version = VK_VERSION_MINOR(props.apiVersion);
 			uint32_t patch_version = VK_VERSION_PATCH(props.apiVersion);
@@ -115,14 +118,14 @@ namespace clannad
 			}
 			// retrieve queue family count
 			uint32_t queueFamilyCount = 0;
-			_instApi.vkGetPhysicalDeviceQueueFamilyProperties( physicalDevice, &queueFamilyCount, nullptr);
+			_inst.vkGetPhysicalDeviceQueueFamilyProperties( physicalDevice, &queueFamilyCount, nullptr);
 			if (queueFamilyCount == 0)
 			{
 				return false;
 			}
 			// select an available queue family
 			std::vector<VkQueueFamilyProperties> queueFamilyProperties(queueFamilyCount);
-			_instApi.vkGetPhysicalDeviceQueueFamilyProperties(physicalDevice, &queueFamilyCount, queueFamilyProperties.data());
+			_inst.vkGetPhysicalDeviceQueueFamilyProperties(physicalDevice, &queueFamilyCount, queueFamilyProperties.data());
 			uint32_t index = 0;
 			for (const VkQueueFamilyProperties& property : queueFamilyProperties)
 			{
@@ -160,13 +163,13 @@ namespace clannad
 				nullptr                                         // const VkPhysicalDeviceFeatures    *pEnabledFeatures
 			};
 			//
-			rst = _instApi.vkCreateDevice( _device._host, &deviceCreateInfo, nullptr, &_device._id);
+			rst = _inst.vkCreateDevice( _device._host, &deviceCreateInfo, nullptr, &_device._id);
 			//
 			if (rst != VK_SUCCESS)
 				return false;
 			// Load device level api
 #define VULKAN_DEVICE_API(api)\
-	if (!(api_.##api = (PFN_##api)_instApi.vkGetDeviceProcAddr(_device._id, #api))) {\
+	if (!(_device._api.##api = (PFN_##api)_inst.vkGetDeviceProcAddr(_device._id, #api))) {\
 	\
       std::cout << "Could not load global level function: " << #api << "!" << std::endl;  \
       return false;                                                                       \

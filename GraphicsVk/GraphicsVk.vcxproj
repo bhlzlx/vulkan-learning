@@ -136,11 +136,13 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BufferVk.h" />
     <ClInclude Include="DeviceVk.h" />
     <ClInclude Include="ViewVk.h" />
-    <ClInclude Include="XoGraphic.h" />
+    <ClInclude Include="clGraphic.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="BufferVk.cpp" />
     <ClCompile Include="DeviceVk.cpp" />
     <ClCompile Include="ViewVk.cpp" />
   </ItemGroup>

@@ -22,19 +22,15 @@ namespace clannad
 			return apiLoader;
 		}
 		//
-		VkInstance GetVkInstance(const InstanceApi*& api_)
+		const Instance& GetVkInstance()
 		{
-			static VkInstance vkInst = nullptr;
-			static InstanceApi InstApi;
-			if (!vkInst)
+			static Instance instance;
+			if (!instance._id)
 			{
 				auto apiLoader = GetApiLoader();
-				bool rst = apiLoader->CreateInstance(vkInst, InstApi);
-				if (!rst)
-					return nullptr;
+				bool rst = apiLoader->CreateInstance(instance);
 			}
-			api_ = &InstApi;
-			return vkInst;
+			return instance;
 		}
 		//
 		bool  View::_createSemaphore()
@@ -77,14 +73,13 @@ namespace clannad
 
 		bool View::_updateSwapchain()
 		{
-			const InstanceApi* instApi = nullptr;
-			VkInstance inst = GetVkInstance(instApi);
+			const Instance& inst = GetVkInstance();
 			if (!inst)
 				return nullptr;
 			//
 			VkDevice &device = _host->_id;
 			DeviceApi &api = _host->_api;
-			api.vkDeviceWaitIdle( device );
+			_host->vkDeviceWaitIdle( device );
 			//
 			_swapchainCreateInfo.oldSwapchain = _swapchain;
 			if (0 == _swapchainCreateInfo.imageExtent.width || 0 == _swapchainCreateInfo.imageExtent.height)
@@ -281,8 +276,8 @@ namespace clannad
 			// get command queues
 			VkDevice &device = _host->_id;
 			DeviceApi &api = _host->_api;
-			const InstanceApi* instApi;
-			VkInstance inst = GetVkInstance( instApi );
+			//
+			const Instance& inst = GetVkInstance();
 			// 实际上在创建逻辑设备的时候这些队列都已经生成好，这里仅仅里取出来句柄
 			api.vkGetDeviceQueue(device, _host->_graphicQueueFamily, 0, &_graphicQueue);
 			api.vkGetDeviceQueue(device, _host->_presentQueueFamily, 0, &_presentQueue);
@@ -292,32 +287,32 @@ namespace clannad
 			// vkDeviceWaitIdle(_vkDevice);
 			//
 			VkSurfaceCapabilitiesKHR surfaceCapabilities;
-			if (instApi->vkGetPhysicalDeviceSurfaceCapabilitiesKHR( _host->_host, _surface, &surfaceCapabilities) != VK_SUCCESS)
+			if (inst.vkGetPhysicalDeviceSurfaceCapabilitiesKHR( _host->_host, _surface, &surfaceCapabilities) != VK_SUCCESS)
 			{
 				return false;
 			}
 			uint32_t formatCount;
-			if (instApi->vkGetPhysicalDeviceSurfaceFormatsKHR(_host->_host, _surface, &formatCount, nullptr) != VK_SUCCESS)
+			if (inst.vkGetPhysicalDeviceSurfaceFormatsKHR(_host->_host, _surface, &formatCount, nullptr) != VK_SUCCESS)
 			{
 				return false;
 			}
 			if (formatCount == 0)
 				return false;
 			std::vector<VkSurfaceFormatKHR> surfaceFormats(formatCount);
-			if (instApi->vkGetPhysicalDeviceSurfaceFormatsKHR(_host->_host, _surface, &formatCount, &surfaceFormats[0]) != VK_SUCCESS)
+			if (inst.vkGetPhysicalDeviceSurfaceFormatsKHR(_host->_host, _surface, &formatCount, &surfaceFormats[0]) != VK_SUCCESS)
 			{
 				return false;
 			}
 
 			uint32_t nPresentMode;
-			if ((instApi->vkGetPhysicalDeviceSurfacePresentModesKHR(_host->_host, _surface, &nPresentMode, nullptr) != VK_SUCCESS) ||
+			if ((inst.vkGetPhysicalDeviceSurfacePresentModesKHR(_host->_host, _surface, &nPresentMode, nullptr) != VK_SUCCESS) ||
 				(nPresentMode == 0))
 			{
 				return false;
 			}
 
 			std::vector<VkPresentModeKHR> presentModes(nPresentMode);
-			if (instApi->vkGetPhysicalDeviceSurfacePresentModesKHR(_host->_host, _surface, &nPresentMode, presentModes.data()) != VK_SUCCESS)
+			if (inst.vkGetPhysicalDeviceSurfacePresentModesKHR(_host->_host, _surface, &nPresentMode, presentModes.data()) != VK_SUCCESS)
 			{
 				return false;
 			}
@@ -403,8 +398,7 @@ namespace clannad
 		//
 		View * View::createViewWin32(HWND _hwnd)
 		{
-			const InstanceApi* instApi = nullptr;
-			VkInstance inst = GetVkInstance(instApi);
+			const Instance& inst = GetVkInstance();
 			if (!inst)
 				return nullptr;
 			//
@@ -419,7 +413,7 @@ namespace clannad
 				_hwnd
 			};
 			VkSurfaceKHR surface;
-			VkResult rst = instApi->vkCreateWin32SurfaceKHR(inst, &surface_create_info, nullptr, &surface);
+			VkResult rst = inst.vkCreateWin32SurfaceKHR(inst, &surface_create_info, nullptr, &surface);
 			if (rst == VK_SUCCESS)
 			{
 				View* view = new View();

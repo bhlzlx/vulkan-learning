@@ -17,6 +17,25 @@ namespace clannad
 #include "inl/instanceFunctions.inl"
 		};
 
+		class Instance
+		{
+		public:
+			VkInstance _id = nullptr;
+			union
+			{
+				InstanceApi api;
+				struct {
+#define VULKAN_INSTANCE_API( FUNCTION ) PFN_##FUNCTION FUNCTION;
+#include "inl/instanceFunctions.inl"
+				};
+			};
+
+			operator VkInstance() const
+			{
+				return _id;
+			}
+		};
+
 		struct DeviceApi
 		{
 #define VULKAN_DEVICE_API( FUNCTION ) PFN_##FUNCTION FUNCTION;
@@ -36,6 +55,7 @@ namespace clannad
 			VkDevice _id;
 			VkPhysicalDevice _host;
 			uint32_t _graphicQueueFamily;
+			DeviceApi _api;
 		};
 
 		//
@@ -53,8 +73,8 @@ namespace clannad
 			}
 		public:
 			bool Initialize();
-			bool CreateInstance(VkInstance& inst_, InstanceApi& api_);
-			bool CreateDevice( const InstanceApi& _instApi, VkInstance _inst, size_t _preferedPD, DeviceLoadData& _device, DeviceApi& api_ );
+			bool CreateInstance(Instance & inst_);
+			bool CreateDevice(const Instance& _inst, size_t _preferedPD, DeviceLoadData& _device);
 		};
 	}
 

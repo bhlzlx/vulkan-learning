@@ -8,8 +8,16 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GraphicsVK", "GraphicsVK\GraphicsVK.vcxproj", "{16BB1228-430E-48CE-B28B-389AE5BC7DA9}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VkApiLoaderConsole", "VkApiLoaderConsole\VkApiLoaderConsole.vcxproj", "{8B83F507-87E0-4439-8F8E-0157E3C5A64E}"
+	ProjectSection(ProjectDependencies) = postProject
+		{6DE6480D-5738-4FCE-9009-3BC846DEAC85} = {6DE6480D-5738-4FCE-9009-3BC846DEAC85}
+		{16BB1228-430E-48CE-B28B-389AE5BC7DA9} = {16BB1228-430E-48CE-B28B-389AE5BC7DA9}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Demo", "Demo\Demo.vcxproj", "{622B7CD5-B906-42F5-AF90-A79B5C351B7E}"
+	ProjectSection(ProjectDependencies) = postProject
+		{6DE6480D-5738-4FCE-9009-3BC846DEAC85} = {6DE6480D-5738-4FCE-9009-3BC846DEAC85}
+		{16BB1228-430E-48CE-B28B-389AE5BC7DA9} = {16BB1228-430E-48CE-B28B-389AE5BC7DA9}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

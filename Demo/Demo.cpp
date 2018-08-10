@@ -164,15 +164,14 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
    bool rst = false;
    rst = apiLoader.Initialize();
    //
-   VkInstance inst;
-   rst = apiLoader.CreateInstance(inst, instApi);
+   clannad::vulkan::Instance inst;
+   rst = apiLoader.CreateInstance(inst);
    clannad::vulkan::DeviceLoadData deviceData;
-   clannad::vulkan::DeviceApi deviceApi;
-   rst = apiLoader.CreateDevice(instApi, inst, 0, deviceData, deviceApi);
+   rst = apiLoader.CreateDevice(inst,0, deviceData);
    //
    view = clannad::vulkan::View::createViewWin32(hWnd);
    //
-   device = new clannad::vulkan::Device(deviceData._id, deviceApi, deviceData._host, deviceData._graphicQueueFamily);
+   device = new clannad::vulkan::Device(deviceData);
    //
    device->attachView(view);
    //

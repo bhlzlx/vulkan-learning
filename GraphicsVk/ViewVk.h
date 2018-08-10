@@ -10,7 +10,7 @@ namespace clannad
 	namespace vulkan
 	{
 		class Device;
-		VkInstance GetVkInstance(const InstanceApi*& api_);
+		const Instance& GetVkInstance();
 
 		class View
 		{

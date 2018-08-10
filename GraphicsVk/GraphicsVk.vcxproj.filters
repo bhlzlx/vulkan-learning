@@ -24,7 +24,10 @@
     <ClInclude Include="ViewVk.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="XoGraphic.h">
+    <ClInclude Include="BufferVk.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="clGraphic.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -33,6 +36,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="DeviceVk.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="BufferVk.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

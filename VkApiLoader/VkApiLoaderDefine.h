@@ -28,13 +28,21 @@ namespace clannad
 #endif
 		};
 
+#ifdef NDEBUG
+#else
+#endif
+
+		static const char* validationLayers[] = {
+			"VK_LAYER_LUNARG_standard_validation"
+		};
+
 		VkInstanceCreateInfo defInstCreateInfo = {
 			VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO,
 			nullptr,
 			0,
 			&defAppInfo,
 			0,
-			nullptr,
+			&validationLayers[0],
 			sizeof(defExts) / sizeof(const char *),
 			&defExts[0]
 		};

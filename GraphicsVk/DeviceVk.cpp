@@ -58,6 +58,25 @@ namespace clannad
 			return false;
 		}
 
+		uint32_t Device::getMemoryType(uint32_t _memTypeBits, VkMemoryPropertyFlags properties)
+		{
+			const auto inst = GetVkInstance();
+			VkPhysicalDeviceMemoryProperties memProperties;
+			inst.vkGetPhysicalDeviceMemoryProperties(_host, &memProperties);
+			for (uint32_t i = 0; i < memProperties.memoryTypeCount; i++)
+			{
+				if (_memTypeBits & (1 << i))
+				{
+					if ((memProperties.memoryTypes[i].propertyFlags & properties) == properties) 
+					{
+						return i;
+					}
+				}
+			}
+			throw std::runtime_error("failed to find suitable memory type!");
+			return 0;
+		}
+
 	}
 }
 

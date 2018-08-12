@@ -14,6 +14,7 @@ namespace clannad
 
 		class View
 		{
+			friend class Texture2D;
 		private:
 			Device * _host;
 			//
@@ -46,6 +47,8 @@ namespace clannad
 			bool end();
 			bool prepareForSwapchain();
 			void setHost(Device * _host) { this->_host = _host; }
+
+			VkCommandPool getCommandPool() { return _commandPool;  }
 			VkSurfaceKHR getSurface(){ return _surface; }
 		public:
 			static View* createViewWin32( HWND _hwnd );

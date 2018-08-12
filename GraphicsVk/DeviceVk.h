@@ -9,7 +9,9 @@ namespace clannad
 
 		class Device
 		{
-		friend class View;
+			friend class Buffer;
+			friend class View;
+			friend class Texture2D;
 		private:
 			VkDevice _id;
 			union
@@ -31,6 +33,13 @@ namespace clannad
 			~Device();
 			//
 			bool attachView(View* _view);
+			//
+			View* getView()
+			{
+				return _currentView;
+			}
+
+			uint32_t getMemoryType(uint32_t _memTypeBits, VkMemoryPropertyFlags properties);
 			// 
 			operator VkDevice()
 			{

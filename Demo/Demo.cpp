@@ -9,10 +9,15 @@
 
 #include "DeviceVk.h"
 #include "ViewVk.h"
+#include "TextureVk.h"
 #include "VkApiLoader.h"
+#include "clGraphic.h"
 #include <vulkan/vulkan.h>
 #include <chrono>
 #include <thread>
+#include <iostream>
+#include <io.h>
+#include <fcntl.h> //、<sys\types.h>、<sys\stat.h>、<share.h>
 
 clannad::vulkan::Device* device = nullptr;
 clannad::vulkan::View* view = nullptr;
@@ -140,6 +145,64 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
     return RegisterClassExW(&wcex);
 }
 
+
+
+static const WORD MAX_CONSOLE_LINES = 500;
+void RedirectIOToConsole()
+{
+	int hConHandle;
+	long lStdHandle;
+	CONSOLE_SCREEN_BUFFER_INFO coninfo;
+	FILE *fp;
+
+	// 分配一个控制台程序  
+	AllocConsole();
+
+	// 设置足够大的屏幕缓存可以让我们滑动文本
+	GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &coninfo);
+
+	// 设置控制台屏幕的高度
+	coninfo.dwSize.Y = MAX_CONSOLE_LINES;
+
+	// 设置控制台屏幕缓存大小
+	SetConsoleScreenBufferSize(GetStdHandle(STD_OUTPUT_HANDLE),
+		coninfo.dwSize);
+
+	// 获取标准输出句柄
+	lStdHandle = (long)GetStdHandle(STD_OUTPUT_HANDLE);
+
+	//打开标准输出句柄，类似打开文件的方式如fopen,返回一个文件描述符
+	hConHandle = _open_osfhandle(lStdHandle, _O_TEXT);
+
+	// 以可写的方式打开
+	fp = _fdopen(hConHandle, "w");
+
+	*stdout = *fp;
+
+	setvbuf(stdout, NULL, _IONBF, 0);
+
+	// redirect unbuffered STDIN to the console  
+	lStdHandle = (long)GetStdHandle(STD_INPUT_HANDLE);
+	hConHandle = _open_osfhandle(lStdHandle, _O_TEXT);
+
+	fp = _fdopen(hConHandle, "r");
+	*stdin = *fp;
+	setvbuf(stdin, NULL, _IONBF, 0);
+
+	// redirect unbuffered STDERR to the console  
+	lStdHandle = (long)GetStdHandle(STD_ERROR_HANDLE);
+	hConHandle = _open_osfhandle(lStdHandle, _O_TEXT);
+
+	fp = _fdopen(hConHandle, "w");
+	*stderr = *fp;
+	setvbuf(stderr, NULL, _IONBF, 0);
+
+	// make cout, wcout, cin, wcin, wcerr, cerr, wclog and clog  
+	// point to console as well  
+	std::ios::sync_with_stdio();
+}
+
+
 //
 //   函数: InitInstance(HINSTANCE, int)
 //
@@ -161,6 +224,9 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
    {
       return FALSE;
    }
+
+   RedirectIOToConsole();  
+
    bool rst = false;
    rst = apiLoader.Initialize();
    //
@@ -176,6 +242,12 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
    device->attachView(view);
    //
    view->prepareForSwapchain();
+
+   clannad::ClTextureDesc desc;
+   desc.format = clannad::ClPixelFormat_RGBA8888_UNORM;
+   desc.width = desc.height = 64;
+   desc.mipmap = false;
+   auto tex = clannad::vulkan::Texture2D::Create(device, desc);
    //
    ShowWindow(hWnd, nCmdShow);
    UpdateWindow(hWnd);

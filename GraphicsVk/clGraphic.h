@@ -26,7 +26,7 @@ namespace clannad
 		ClPixelFormat_BGRA4444_SNORM_PACKED,
 		ClPixelFormat_RGB565_UNORM_PACKED,
 		ClPixelFormat_Depth_24F,
-		ClPixelFormat_Depth_32F,
+		ClPixelFormat_Depth32F,
 		ClPixelFormat_Stencil8,
 		ClPixelFormat_Depth24Stencil8_PACKED,
 		ClPixelFormat_Depth32Stencil8,
@@ -173,11 +173,26 @@ namespace clannad
 		ClBlendFactorOneMinusSource1Alpha,
 	};
 
-	enum ClTextureAccess:uint8
+	enum ClTextureUsage:uint8
 	{
-		ClTextureAccessRead = 0x1,
-		ClTextureAccessWrite = 0x2,
-		ClTextureAccessFramebuffer = 0x4
+		/*
+		VK_IMAGE_USAGE_TRANSFER_SRC_BIT = 0x00000001,
+		VK_IMAGE_USAGE_TRANSFER_DST_BIT = 0x00000002,
+		VK_IMAGE_USAGE_SAMPLED_BIT = 0x00000004,
+		VK_IMAGE_USAGE_STORAGE_BIT = 0x00000008,
+		VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT = 0x00000010,
+		VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT = 0x00000020,
+		VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT = 0x00000040,
+		VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT = 0x00000080,
+		*/
+		ClTextureUsageTransferSrc = 0x1,
+		ClTextureUsageTransferDst = 0x2,
+		ClTextureUsageSampled = 0x4,
+		ClTextureUsageStorage = 0x8,
+		ClTextureUsageColorAttachment = 0x10,
+		ClTextureUsageDepthStencilAttachment = 0x20,
+		ClTextureUsageTransientAttachment = 0x40,
+		ClTextureUsageInputAttachment = 0x80,
 	};
 
 	enum ClTextureAddress
@@ -196,14 +211,27 @@ namespace clannad
 		ClFilerNone,
 	};
 
+	enum ClTextureType
+	{
+		ClTexture1D,
+		ClTexture2D,
+		ClTexture3D,
+		ClTextureCube
+	};
+
 	struct ClTextureDesc
 	{
-		uint16 width;
-		uint16 height;
-		ClPixelFormat format;
-		bool mipmap;
+		uint16 width = 0;
+		uint16 height = 0;
+		ClPixelFormat format = ClPixelFormat_Invalid;
+		bool mipmap = false;
 		//
-		ClTextureAccess access;
+		uint8 usage =
+			  ClTextureUsageTransferSrc
+			| ClTextureUsageTransferDst
+			| ClTextureUsageSampled
+			| ClTextureUsageStorage
+			| ClTextureUsageColorAttachment;
 	};
 
 	struct ClVertexAttribute
@@ -308,6 +336,16 @@ namespace clannad
 		ClSamplerFilter minFilter;
 		ClSamplerFilter magFilter;
 		ClSamplerFilter mipFilter;
+	};
+
+	template <class T>
+	struct ClRect
+	{
+		T left, right, bottom, top;
+		ClRect()
+		{
+			left = right = bottom = top = 0;
+		}
 	};
 };
 

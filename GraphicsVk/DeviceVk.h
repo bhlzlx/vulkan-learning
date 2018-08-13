@@ -14,15 +14,7 @@ namespace clannad
 			friend class Texture2D;
 		private:
 			VkDevice _id;
-			union
-			{
-				DeviceApi _api;
-				struct {
-#define VULKAN_DEVICE_API( FUNCTION ) PFN_##FUNCTION FUNCTION;
-#include "inl/deviceFunctions.inl"
-				};
-			};
-			
+
 			VkPhysicalDevice _host;
 			uint32_t _graphicQueueFamily;
 			uint32_t _presentQueueFamily;

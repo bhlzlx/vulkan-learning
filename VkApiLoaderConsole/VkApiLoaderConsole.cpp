@@ -10,10 +10,9 @@ int main()
 	bool rst = apiLoader.Initialize();
 	VkInstance instance;
 	VkDevice device;
-	clannad::vulkan::Instance inst;
 	clannad::vulkan::DeviceLoadData deviceLoadData;
-	rst = apiLoader.CreateInstance(inst);
-	rst = apiLoader.CreateDevice(inst,0, deviceLoadData);
+	instance = apiLoader.CreateInstance();
+	rst = apiLoader.CreateDevice(instance,0,deviceLoadData);
     return 0;
 }
 

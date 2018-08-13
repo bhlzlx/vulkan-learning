@@ -23,7 +23,6 @@ clannad::vulkan::Device* device = nullptr;
 clannad::vulkan::View* view = nullptr;
 clannad::vulkan::ApiLoader apiLoader;
 clannad::vulkan::DeviceLoadData;
-clannad::vulkan::InstanceApi instApi;
 
 #define MAX_LOADSTRING 100
 
@@ -230,8 +229,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
    bool rst = false;
    rst = apiLoader.Initialize();
    //
-   clannad::vulkan::Instance inst;
-   rst = apiLoader.CreateInstance(inst);
+   VkInstance inst = apiLoader.CreateInstance();
    clannad::vulkan::DeviceLoadData deviceData;
    rst = apiLoader.CreateDevice(inst,0, deviceData);
    //

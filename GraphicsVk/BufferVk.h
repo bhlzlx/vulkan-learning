@@ -6,6 +6,8 @@
 #include "vulkan/vulkan.h"
 #include "clGraphic.h"
 #include <vector>
+#include <mutex>
+#include <functional>
 
 namespace clannad
 {
@@ -15,6 +17,8 @@ namespace clannad
 		class Texture2D;
 		class Buffer
 		{
+			friend class DataBlitManager;
+			friend class DataBlitManager;
 		public:
 			enum UsageFlags
 			{
@@ -50,6 +54,12 @@ namespace clannad
 			static Buffer* CreateIndexBuffer(Device* _device, size_t _size, SharingMode _sharingMode = ShairingModeExclusive);
 			void bufferData(void* _data, size_t _size, size_t _offset);
 			void release();
+			size_t size() {
+				return _size;
+			}
+			operator VkBuffer(){
+				return _id;
+			}
 		};
 
 		class DataBlitManager
@@ -57,13 +67,13 @@ namespace clannad
 		public:
 			enum BlitType
 			{
-				BlitBuffer2Buffer,
-				BlitBuffer2Image,
-				BlitImage2Buffer,
-				BlitImage2Image
+				BlitBuffer2Buffer = 0,
+				BlitBuffer2Image = 1,
+				BlitImage2Buffer = 2,
+				BlitImage2Image = 3
 			};
 
-			struct BlitInfomation
+			struct BlitOperation
 			{
 				BlitType type;
 				union {
@@ -74,35 +84,65 @@ namespace clannad
 						size_t srcOffset;
 						size_t dstOffset;
 						size_t size;
-					}b2b;
+					}buf2buf;
 					struct 
 					{
 						Buffer* buffer;
 						Texture2D * texture;
 						size_t bufferOffset;
-						ClRect<size_t> region;
-					}b2t;
+						ClRect<uint32_t> region;
+					}buf2tex;
 					struct 
 					{
-						Buffer* buffer;
 						Texture2D * texture;
+						Buffer* buffer;
 						size_t bufferOffset;
-						ClRect<size_t> region;
-					}t2b;
+						size_t size;
+						ClRect<uint32_t> region;
+					}tex2buf;
 					struct
 					{
 						Texture2D * src;
-						ClRect<size_t> srcRegion;
 						Texture2D * dst;
-						ClRect<size_t> dstRegion;
-					}t2t;
+						ClRect<uint32_t> srcRegion;
+						ClRect<uint32_t> dstRegion;
+					}tex2tex;
+					struct
+					{
+						void* src;
+						void* dst;
+					};
+					//
 				};
+				std::function<void( void* _src, void * _dst)> completeHandler;
+				BlitOperation(){}
+			public:
+				void Encode( VkCommandBuffer _cmd );
 			};
 		private:
-			std::vector<BlitInfomation> _vecCommited;
-			std::vector<BlitInfomation> _vecNeedCommit;
-			void copyToBuffer( Buffer* _src, size_t _offsetSrc, Buffer* _dst, size_t _offsetDst, size_t _size );
-			//void copyToImage( Buffer* _src, );
+			std::mutex _mutex;
+			std::vector<BlitOperation> _vecCommited;
+			std::vector<BlitOperation> _vecNeedCommit;
+		private:
+			void _onCommitComplete();
+		public:
+			void copyToBuffer( Buffer* _src, size_t _offsetSrc, Buffer* _dst, size_t _offsetDst, size_t _size, std::function<void(void* _src, void * _dst)> _completeHandler = nullptr);
+			void copyToBuffer(Texture2D* _src, ClRect<uint32_t> _region, Buffer* _dst, size_t _offset, std::function<void(void* _src, void * _dst)> _completeHandler = nullptr);
+			void copyToTexture2D(Buffer* _src, size_t _offset, size_t _size, Texture2D* _dst, ClRect<uint32_t> _region, std::function<void(void* _src, void * _dst)> _completeHandler = nullptr);
+			void copyToTexture2D(Texture2D* _src, ClRect<uint32_t> _srcRegion, Texture2D* _dst, ClRect<uint32_t> _dstRegion, std::function<void(void* _src, void * _dst)> _completeHandler = nullptr);
+			//
+			void queueBlitCommand(Device* _device);
+			// blocked function
+			void blockedCopyToImage(Device* _device, Buffer* _src, size_t _offset, size_t _size, Texture2D* _dst, ClRect<uint32_t> _region);
+		public:
+			static DataBlitManager* Instance()
+			{
+				static DataBlitManager * instance = nullptr;
+				if( !instance ) 
+					instance = new DataBlitManager();
+				return instance;
+
+			}
 		};
 	}
 }

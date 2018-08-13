@@ -41,6 +41,9 @@ namespace clannad
 				return _desc;
 			}
 			void subImage(void * _data, const ClRect<uint32_t>& _rect);
+			operator VkImage() {
+				return _id;
+			}
 			static Texture2D* Create(Device* _device, const ClTextureDesc& _desc);
 		};
 	}

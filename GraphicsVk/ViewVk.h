@@ -10,7 +10,7 @@ namespace clannad
 	namespace vulkan
 	{
 		class Device;
-		const Instance& GetVkInstance();
+		const VkInstance & GetVkInstance();
 
 		class View
 		{
@@ -49,6 +49,7 @@ namespace clannad
 			void setHost(Device * _host) { this->_host = _host; }
 
 			VkCommandPool getCommandPool() { return _commandPool;  }
+			VkQueue getGraphicQueue() { return _graphicQueue;  }
 			VkSurfaceKHR getSurface(){ return _surface; }
 		public:
 			static View* createViewWin32( HWND _hwnd );

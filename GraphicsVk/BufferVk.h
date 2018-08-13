@@ -124,7 +124,6 @@ namespace clannad
 			std::vector<BlitOperation> _vecCommited;
 			std::vector<BlitOperation> _vecNeedCommit;
 		private:
-			void _onCommitComplete();
 		public:
 			void copyToBuffer( Buffer* _src, size_t _offsetSrc, Buffer* _dst, size_t _offsetDst, size_t _size, std::function<void(void* _src, void * _dst)> _completeHandler = nullptr);
 			void copyToBuffer(Texture2D* _src, ClRect<uint32_t> _region, Buffer* _dst, size_t _offset, std::function<void(void* _src, void * _dst)> _completeHandler = nullptr);
@@ -135,14 +134,15 @@ namespace clannad
 			// blocked function
 			void blockedCopyToImage(Device* _device, Buffer* _src, size_t _offset, size_t _size, Texture2D* _dst, ClRect<uint32_t> _region);
 		public:
+			static DataBlitManager* _Instance;
+
 			static DataBlitManager* Instance()
 			{
-				static DataBlitManager * instance = nullptr;
-				if( !instance ) 
-					instance = new DataBlitManager();
-				return instance;
-
+				if( !_Instance)
+					_Instance = new DataBlitManager();
+				return _Instance;
 			}
 		};
+
 	}
 }

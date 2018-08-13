@@ -67,10 +67,8 @@ namespace clannad
 			return buffer;
 		}
 
-		void DataBlitManager::_onCommitComplete()
-		{
-
-		}
+		//
+		DataBlitManager* DataBlitManager::_Instance = nullptr;
 
 		//
 		void DataBlitManager::copyToBuffer(Buffer* _src, size_t _offsetSrc, Buffer* _dst, size_t _offsetDst, size_t _size, std::function<void(void* _src, void * _dst)> _completeHandler)
@@ -312,8 +310,8 @@ namespace clannad
 			}
 		}
 
-	}
+		
 
-	
+	}
 }
 

@@ -60,17 +60,18 @@ VULKAN_DEVICE_API(vkFreeMemory)
 VULKAN_DEVICE_API(vkDestroyBuffer)
 VULKAN_DEVICE_API(vkDestroyFence)
 
-// Tutorial 05
+// buffer copy
 VULKAN_DEVICE_API(vkCmdCopyBuffer)
+VULKAN_DEVICE_API(vkCmdCopyBufferToImage)
+VULKAN_DEVICE_API(vkCmdCopyImageToBuffer)
+VULKAN_DEVICE_API(vkCmdCopyImage)
+VULKAN_DEVICE_API(vkCmdBlitImage)
 
 // Tutorial 06
 VULKAN_DEVICE_API(vkCreateImage)
 VULKAN_DEVICE_API(vkGetImageMemoryRequirements)
 VULKAN_DEVICE_API(vkBindImageMemory)
 VULKAN_DEVICE_API(vkCreateSampler)
-VULKAN_DEVICE_API(vkCmdCopyBufferToImage)
-VULKAN_DEVICE_API(vkCmdCopyImageToBuffer)
-VULKAN_DEVICE_API(vkCmdCopyImage)
 VULKAN_DEVICE_API(vkCreateDescriptorSetLayout)
 VULKAN_DEVICE_API(vkCreateDescriptorPool)
 VULKAN_DEVICE_API(vkAllocateDescriptorSets)

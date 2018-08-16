@@ -37,6 +37,10 @@ namespace clannad
 			{
 				return _id;
 			}
+			VkDevice get()
+			{
+				return _id;
+			}
 		};
 
 	}

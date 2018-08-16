@@ -276,8 +276,7 @@ namespace clannad
 		//
 		uint8 colorAttachmentCount = 1;
 		ClPixelFormat colorAttachments[COLOR_ATTACHMENT_MAX] = { ClPixelFormat_RGBA8888_UNORM };
-		ClPixelFormat depthAttachment = ClPixelFormat_Depth32F;
-		ClPixelFormat stencilAttachment = ClPixelFormat_Invalid;
+		ClPixelFormat depthStencilAttachment = ClPixelFormat_Depth32F;
 	};
 
 	struct ClDepthState

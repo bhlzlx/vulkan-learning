@@ -41,18 +41,39 @@ namespace clannad
 			{
 				return _desc;
 			}
+			VkImageView getImageView()const
+			{
+				return _imageView;
+			}
+
 			void subImage(void * _data, const ClRect<uint32_t>& _rect);
+			//
+//
 			Device* getHost() {
 				return _host;
 			}
 			operator VkImage() {
 				return _id;
 			}
-			//
-			VkImageView getImageView()
+
+			void release()
 			{
-				return _imageView;
+				if (_imageView)
+				{
+					vkDestroyImageView(*_host, _imageView, nullptr);
+				}
+				if (_id)
+				{
+					vkDestroyImage(*_host, _id, nullptr);
+				}
+				if (_memory)
+				{
+					vkFreeMemory(*_host, _memory, nullptr);
+				}
+				delete this;
 			}
+			//
+		public:
 			static Texture2D* Create(Device* _device, const ClTextureDesc& _desc);
 		};
 
@@ -68,6 +89,8 @@ namespace clannad
 		private:
 			Sampler2D() {}
 			~Sampler2D() {}
+		public:
+			void release();
 		public:
 			Sampler2D* Create(Device* _host, const ClSamplerDesc& _desc);
 		};

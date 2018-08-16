@@ -41,6 +41,7 @@ namespace clannad
 			case clannad::ClStoreActionDontCare:
 				return VK_ATTACHMENT_STORE_OP_DONT_CARE;
 			default:
+				break;
 			}
 			return VK_ATTACHMENT_STORE_OP_DONT_CARE;
 		}
@@ -53,15 +54,20 @@ namespace clannad
 		{
 		private:
 			ClAttachmentDesc _attachmentDesc;
+			//
+			VkFramebuffer _id;
+			VkRenderPass _renderPass = nullptr;
+			//
 			Texture2D* _colorAttachments[ClAttachmentDesc::COLOR_ATTACHMENT_MAX] = { nullptr };
-			Texture2D* _depthAttachment = nullptr;
-			Texture2D* _stencilAttachment = nullptr;
+			Texture2D* _depthStencilAttachment = nullptr;
 			//
 			uint32_t _width = 0;
 			uint32_t _height = 0;
 			//
 			Device* _host = nullptr;
 			//
+		private:
+			void _clear();
 		public:
 			Framebuffer();
 			~Framebuffer();

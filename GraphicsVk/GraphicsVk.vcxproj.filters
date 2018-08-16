@@ -33,7 +33,7 @@
     <ClInclude Include="TextureVk.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Framebuffer.h">
+    <ClInclude Include="FramebufferVk.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -50,7 +50,7 @@
     <ClCompile Include="TextureVk.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="Framebuffer.cpp">
+    <ClCompile Include="FramebufferVk.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

@@ -219,6 +219,19 @@ namespace clannad
 		ClTextureCube
 	};
 
+	enum ClLoadAction
+	{
+		ClLoadActionLoad,
+		ClLoadActionClear,
+		ClLoadActionDontCare
+	};
+
+	enum ClStoreAction
+	{
+		ClStoreActionStore,
+		ClStoreActionDontCare
+	};
+
 	struct ClTextureDesc
 	{
 		uint16 width = 0;
@@ -257,13 +270,14 @@ namespace clannad
 		uint8 nLayout = 0;
 	};
 
-	struct ClFramebufferAttachmentDesc
+	struct ClAttachmentDesc
 	{
-		static const uint8 Cl_COLOR_ATTACHMENT_MAX = 4;
-		ClPixelFormat colorAttachments[Cl_COLOR_ATTACHMENT_MAX] = { ClPixelFormat_RGBA8888_UNORM };
-		uint8 nColorAttachment = 1;
-		ClPixelFormat depthAttachment = ClPixelFormat_Depth32Stencil8;
-		ClPixelFormat stencilAttachment = ClPixelFormat_Depth32Stencil8;
+		static const uint8 COLOR_ATTACHMENT_MAX = 4;
+		//
+		uint8 colorAttachmentCount = 1;
+		ClPixelFormat colorAttachments[COLOR_ATTACHMENT_MAX] = { ClPixelFormat_RGBA8888_UNORM };
+		ClPixelFormat depthAttachment = ClPixelFormat_Depth32F;
+		ClPixelFormat stencilAttachment = ClPixelFormat_Invalid;
 	};
 
 	struct ClDepthState
@@ -315,17 +329,15 @@ namespace clannad
 		ClBlendState blendState;
 	};
 
-	struct ClRenderpassDesc
+	struct ClPipelineDesc
 	{
-		// shading
-		std::string vertexShader;
-		std::string fragmentShader;
-		// input vertex buffer format 
-		ClVertexDesc vertexDesc;
-		// render state
 		ClRenderState renderState;
-		// framebuffer structure description
-		ClFramebufferAttachmentDesc attachments;
+		//
+		ClVertexDesc vertexDesc;
+		const char * vertexShader;
+		const char * fragmentShader;
+		//
+		ClAttachmentDesc attachmentDesc;
 	};
 
 	struct ClSamplerDesc

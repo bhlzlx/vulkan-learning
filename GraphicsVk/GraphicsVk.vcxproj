@@ -138,6 +138,7 @@
   <ItemGroup>
     <ClInclude Include="BufferVk.h" />
     <ClInclude Include="DeviceVk.h" />
+    <ClInclude Include="Framebuffer.h" />
     <ClInclude Include="TextureVk.h" />
     <ClInclude Include="ViewVk.h" />
     <ClInclude Include="clGraphic.h" />
@@ -145,6 +146,7 @@
   <ItemGroup>
     <ClCompile Include="BufferVk.cpp" />
     <ClCompile Include="DeviceVk.cpp" />
+    <ClCompile Include="Framebuffer.cpp" />
     <ClCompile Include="TextureVk.cpp" />
     <ClCompile Include="ViewVk.cpp" />
   </ItemGroup>

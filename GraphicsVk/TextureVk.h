@@ -48,6 +48,11 @@ namespace clannad
 			operator VkImage() {
 				return _id;
 			}
+			//
+			VkImageView getImageView()
+			{
+				return _imageView;
+			}
 			static Texture2D* Create(Device* _device, const ClTextureDesc& _desc);
 		};
 

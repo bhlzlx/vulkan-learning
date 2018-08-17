@@ -32,6 +32,11 @@ namespace clannad
 				UsageVertex = 0x00000080,
 				UsageIndirect = 0x00000100,
 			};
+			enum MemoryType
+			{
+				MemoryTypeDeviceAccess = 0x1,
+				MemoryTypeHostAccess = 0x2
+			};
 			enum SharingMode
 			{
 				ShairingModeExclusive = VK_SHARING_MODE_EXCLUSIVE,
@@ -46,13 +51,30 @@ namespace clannad
 			//
 			uint32_t _usage;
 			SharingMode _sharingMode;
+			MemoryType _memType;
 			//
 		public:
-			static Buffer* Create( Device* _device, size_t _size, uint32_t _usage, SharingMode _sharingMode = ShairingModeExclusive);
+			//************************************
+			// Method:    Create
+			// FullName:  clannad::vulkan::Buffer::Create
+			// Access:    public static 
+			// Returns:   clannad::vulkan::Buffer*
+			// Qualifier:
+			// Parameter: Device * _device the host device
+			// Parameter: size_t _size
+			// Parameter: uint32_t _usage vertexbuffer, indexbuffer, uniformbufer, storage
+			// Parameter: MemoryType _memType device access(GPU only) or host access(CPU support)
+			// Parameter: SharingMode _sharingMode can be used in multi command queue concurrently??
+			//************************************
+			static Buffer* Create( Device* _device, size_t _size, uint32_t _usage, MemoryType _memType = MemoryTypeDeviceAccess, SharingMode _sharingMode = ShairingModeExclusive);
+			static Buffer* CreateStageBuffer(Device* _device, size_t _size, SharingMode _sharingMode = ShairingModeExclusive);
 			static Buffer* CreateStorageBuffer(Device* _device, size_t _size, SharingMode _sharingMode = ShairingModeExclusive);
 			static Buffer* CreateVertexBuffer(Device* _device, size_t _size, SharingMode _sharingMode = ShairingModeExclusive);
 			static Buffer* CreateIndexBuffer(Device* _device, size_t _size, SharingMode _sharingMode = ShairingModeExclusive);
+			static Buffer* CreateUniformBuffer(Device* _device, size_t _size, SharingMode _sharingMode = ShairingModeExclusive);
 			void bufferData(void* _data, size_t _size, size_t _offset);
+			bool map(void ** _ptr);
+			void unmap(size_t _offset, size_t _size);
 			void release();
 			size_t size() {
 				return _size;

@@ -8,7 +8,7 @@ namespace clannad
 {
 	namespace vulkan
 	{
-		Buffer* Buffer::Create(Device* _device, size_t _size, uint32_t _usage, SharingMode _sharingMode)
+		Buffer* Buffer::Create(Device* _device, size_t _size, uint32_t _usage, MemoryType _memType, SharingMode _sharingMode)
 		{
 			VkBuffer id;
 			VkBufferCreateInfo buffInfo;
@@ -20,19 +20,30 @@ namespace clannad
 			VkResult rst = vkCreateBuffer(_device->_id, &buffInfo, nullptr, &id);
 			if (rst != VK_SUCCESS)
 				return nullptr;
-			// 分配内存
+			// allocate memory
 			VkMemoryRequirements require;
 			vkGetBufferMemoryRequirements(_device->_id, id, &require);
 
 			VkMemoryAllocateInfo allocInfo;
 			allocInfo.allocationSize = require.size;
-			allocInfo.memoryTypeIndex = _device->getMemoryType(require.memoryTypeBits, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
+
+			uint32_t memFlagBits = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
+			if (_memType == MemoryTypeDeviceAccess)
+			{
+				memFlagBits = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
+			}
+			else if( _memType == MemoryTypeHostAccess )
+			{
+				memFlagBits = VK_MEMORY_PROPERTY_HOST_CACHED_BIT | VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT;
+			}			
+			allocInfo.memoryTypeIndex = _device->getMemoryType(require.memoryTypeBits, memFlagBits);
+			
 			allocInfo.pNext = nullptr;
 			allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
 
 			VkDeviceMemory mem;
 			vkAllocateMemory(_device->_id, &allocInfo, nullptr, &mem);
-			// 绑定内存
+			// bind memory to buffer object
 			vkBindBufferMemory(_device->_id, id, mem, 0);
 			//
 			Buffer * buffer = new Buffer();
@@ -42,15 +53,43 @@ namespace clannad
 			buffer->_sharingMode = _sharingMode;
 			buffer->_memory = mem;
 			buffer->_size = _size;
+			buffer->_memType = _memType;
 			//
 			return buffer;
 		}
+
 
 		void Buffer::bufferData(void* _data, size_t _size, size_t _offset)
 		{
 			void * rawPtr = nullptr;
 			vkMapMemory(_host->_id, _memory, _offset, _size, (VkMemoryMapFlags)0, &rawPtr);
-			memcpy(rawPtr, _data, _size);
+			if (rawPtr)
+			{
+				memcpy(rawPtr, _data, _size);
+				vkUnmapMemory(_host->_id, _memory);
+			}
+		}
+
+		bool Buffer::map(void ** _ptr)
+		{
+			void * rawPtr = nullptr;
+			vkMapMemory(*_host, _memory, 0, _size, (VkMemoryMapFlags)0, &rawPtr);
+			if (rawPtr)
+			{
+				return true;
+			}
+		}
+
+		void Buffer::unmap( size_t _offset, size_t _size)
+		{
+			VkMappedMemoryRange mapRange;
+			mapRange.memory = _memory;
+			mapRange.offset = _offset;
+			mapRange.pNext = nullptr;
+			mapRange.size = _size;
+			mapRange.sType = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE;
+			vkFlushMappedMemoryRanges(*_host, 1, &mapRange);
+			// vkInvalidateMappedMemoryRanges
 			vkUnmapMemory(_host->_id, _memory);
 		}
 
@@ -61,9 +100,33 @@ namespace clannad
 			delete this;
 		}
 
+		clannad::vulkan::Buffer* Buffer::CreateStageBuffer(Device* _device, size_t _size, SharingMode _sharingMode /*= ShairingModeExclusive*/)
+		{
+			Buffer* buffer = Create(_device, _size, UsageStorage, MemoryTypeHostAccess);
+			return buffer;
+		}
+
 		Buffer* Buffer::CreateStorageBuffer(Device* _device, size_t _size, SharingMode _sharingMode /*= ShairingModeExclusive*/)
 		{
-			Buffer* buffer = Create(_device, _size, UsageStorage, _sharingMode);
+			Buffer* buffer = Create(_device, _size, UsageStorage, MemoryTypeDeviceAccess, _sharingMode);
+			return buffer;
+		}
+
+		clannad::vulkan::Buffer* Buffer::CreateVertexBuffer(Device* _device, size_t _size, SharingMode _sharingMode /*= ShairingModeExclusive*/)
+		{
+			Buffer* buffer = Create(_device, _size, UsageVertex, MemoryTypeDeviceAccess, _sharingMode);
+			return buffer;
+		}
+
+		clannad::vulkan::Buffer* Buffer::CreateIndexBuffer(Device* _device, size_t _size, SharingMode _sharingMode /*= ShairingModeExclusive*/)
+		{
+			Buffer* buffer = Create(_device, _size, UsageIndex, MemoryTypeDeviceAccess, _sharingMode);
+			return buffer;
+		}
+
+		clannad::vulkan::Buffer* Buffer::CreateUniformBuffer(Device* _device, size_t _size, SharingMode _sharingMode /*= ShairingModeExclusive*/)
+		{
+			Buffer* buffer = Create(_device, _size, UsageUniform, MemoryTypeDeviceAccess, _sharingMode);
 			return buffer;
 		}
 

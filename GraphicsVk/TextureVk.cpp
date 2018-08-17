@@ -96,6 +96,23 @@ namespace clannad
 			DataBlitManager::Instance()->blockedCopyToImage(_host, buffer, 0, buffer->size(), this, _rect);
 		}
 
+		void Texture2D::release()
+		{
+			if (_imageView)
+			{
+				vkDestroyImageView(*_host, _imageView, nullptr);
+			}
+			if (_id)
+			{
+				vkDestroyImage(*_host, _id, nullptr);
+			}
+			if (_memory)
+			{
+				vkFreeMemory(*_host, _memory, nullptr);
+			}
+			delete this;
+		}
+
 		Texture2D * Texture2D::Create(Device * _device, const ClTextureDesc & _desc)
 		{
 			VkImageCreateInfo info =

@@ -56,22 +56,7 @@ namespace clannad
 				return _id;
 			}
 
-			void release()
-			{
-				if (_imageView)
-				{
-					vkDestroyImageView(*_host, _imageView, nullptr);
-				}
-				if (_id)
-				{
-					vkDestroyImage(*_host, _id, nullptr);
-				}
-				if (_memory)
-				{
-					vkFreeMemory(*_host, _memory, nullptr);
-				}
-				delete this;
-			}
+			void release();
 			//
 		public:
 			static Texture2D* Create(Device* _device, const ClTextureDesc& _desc);

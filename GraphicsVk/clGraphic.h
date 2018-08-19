@@ -35,42 +35,61 @@ namespace clannad
 	enum ClVertexFormat:uint8
 	{
 		ClVertexFormatInvalid = 0,
-		ClVertexFormatByte,
-		ClVertexFormatByte2,
-		ClVertexFormatByte3,
-		ClVertexFormatByte4,
-		ClVertexFormatByteNorm,
-		ClVertexFormatByte2Norm,
-		ClVertexFormatByte3Norm,
-		ClVertexFormatByte4Norm,
+		
+		ClVertexFormatUChar,
+		ClVertexFormatUChar2,
+		ClVertexFormatUChar3,
+		ClVertexFormatUChar4,
+		ClVertexFormatSChar,
+		ClVertexFormatSChar2,
+		ClVertexFormatSChar3,
+		ClVertexFormatSChar4,
+
+		ClVertexFormatUCharNorm,
+		ClVertexFormatUChar2Norm,
+		ClVertexFormatUChar3Norm,
+		ClVertexFormatUChar4Norm,
+		ClVertexFormatSCharNorm,
+		ClVertexFormatSChar2Norm,
+		ClVertexFormatSChar3Norm,
+		ClVertexFormatSChar4Norm,
+
 		ClVertexFormatUShort,
 		ClVertexFormatUShort2,
 		ClVertexFormatUShort3,
 		ClVertexFormatUShort4,
+		ClVertexFormatSShort,
+		ClVertexFormatSShort2,
+		ClVertexFormatSShort3,
+		ClVertexFormatSShort4,
+
 		ClVertexFormatUShortNorm,
 		ClVertexFormatUShort2Norm,
 		ClVertexFormatUShort3Norm,
 		ClVertexFormatUShort4Norm,
+		ClVertexFormatSShortNorm,
+		ClVertexFormatSShort2Norm,
+		ClVertexFormatSShort3Norm,
+		ClVertexFormatSShort4Norm,
+
 		ClVertexFormatUInt,
 		ClVertexFormatUInt2,
 		ClVertexFormatUInt3,
 		ClVertexFormatUInt4,
+		ClVertexFormatSInt,
+		ClVertexFormatSInt2,
+		ClVertexFormatSInt3,
+		ClVertexFormatSInt4,
+
 		ClVertexFormatUIntNorm,
 		ClVertexFormatUInt2Norm,
 		ClVertexFormatUInt3Norm,
 		ClVertexFormatUInt4Norm,
-		ClVertexFormatShort,
-		ClVertexFormatShort2,
-		ClVertexFormatShort3,
-		ClVertexFormatShort4,
-		ClVertexFormatShortNorm,
-		ClVertexFormatShort2Norm,
-		ClVertexFormatShort3Norm,
-		ClVertexFormatShort4Norm,
-		ClVertexFormatInt,
-		ClVertexFormatInt2,
-		ClVertexFormatInt3,
-		ClVertexFormatInt4,
+		ClVertexFormatSIntNorm,
+		ClVertexFormatSInt2Norm,
+		ClVertexFormatSInt3Norm,
+		ClVertexFormatSInt4Norm,
+		//
 		ClVertexFormatFloat,
 		ClVertexFormatFloat2,
 		ClVertexFormatFloat3,
@@ -79,6 +98,8 @@ namespace clannad
 		ClVertexFormatFloat2Norm,
 		ClVertexFormatFloat3Norm,
 		ClVertexFormatFloat4Norm,
+		//
+		ClVertexFormatEnd
 	};
 
 	enum ClVertexStepFunction :uint8
@@ -251,23 +272,23 @@ namespace clannad
 	{
 		ClVertexFormat format = ClVertexFormatInvalid;
 		uint16 offset = 0;
-		uint8 bufferIndex = 0xff;
+		uint8 inputIndex = 0xff;
 	};
 
-	struct ClVertexLayout
+	struct ClVertexStream
 	{
 		ClVertexStepFunction stepFunction = ClInvalidStepFunction;
 		uint16 stepRate = 1;
 		uint16 stride = 0;
 	};
 
-	struct ClVertexDesc
+	struct ClVertexLayout
 	{
-		static const uint8 Cl_VERTEX_SUPPORT_MAX = 12;
-		ClVertexAttribute attributes[Cl_VERTEX_SUPPORT_MAX];
-		ClVertexLayout layouts[Cl_VERTEX_SUPPORT_MAX];
-		uint8 nAttri = 0;
-		uint8 nLayout = 0;
+		static const uint8 VERTEX_SUPPORT_MAX = 12;
+		ClVertexAttribute attributes[VERTEX_SUPPORT_MAX];
+		ClVertexStream inputs[VERTEX_SUPPORT_MAX];
+		uint8 attributeCount = 0;
+		uint8 inputCount = 0;
 	};
 
 	struct ClAttachmentDesc

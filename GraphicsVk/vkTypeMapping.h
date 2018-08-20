@@ -169,5 +169,60 @@ namespace clannad
 			}
 			return VkFilter::VK_FILTER_NEAREST;
 		}
+
+		inline VkCullModeFlags mappintCullMode(ClCullMode _cullMode)
+		{
+			switch (_cullMode)
+			{
+			case clannad::ClCullNone:
+				return VkCullModeFlagBits::VK_CULL_MODE_NONE;
+			case clannad::ClCullBack:
+				return VkCullModeFlagBits::VK_CULL_MODE_BACK_BIT;
+			case clannad::ClCullFront:
+				return VkCullModeFlagBits::VK_CULL_MODE_FRONT_BIT;
+			default:
+				break;
+			}
+			return VkCullModeFlagBits::VK_CULL_MODE_BACK_BIT;
+		}
+
+		inline VkPolygonMode  mappingPolygonMode(ClPolygonMode _mode)
+		{
+			switch (_mode)
+			{
+			case clannad::ClPolygonModePoint:
+				return VK_POLYGON_MODE_POINT;
+			case clannad::ClPolygonModeWireframe:
+				return VK_POLYGON_MODE_LINE;
+			case clannad::ClPolygonModeFill:
+				return VK_POLYGON_MODE_FILL;
+			default:
+				break;
+			}
+			return VK_POLYGON_MODE_FILL;
+		}
+
+		inline VkCompareOp mappingCompareFunction(ClCompareFunction _func)
+		{
+			switch (_func)
+			{
+			case clannad::ClCompareAlways:
+				return VK_COMPARE_OP_ALWAYS;
+			case clannad::ClCompareNever:
+				return VK_COMPARE_OP_NEVER;
+			case clannad::ClCompareLess:
+				return VK_COMPARE_OP_LESS;
+			case clannad::ClCompareLessEqual:
+				return VK_COMPARE_OP_LESS_OR_EQUAL;
+			case clannad::ClCompareEqual:
+				return VK_COMPARE_OP_EQUAL;
+			case clannad::ClCompareGreaterEqual:
+				return VK_COMPARE_OP_GREATER_OR_EQUAL;
+			case clannad::ClCompareGreater:
+				return VK_COMPARE_OP_GREATER;
+			default: 
+				return VK_COMPARE_OP_ALWAYS;
+			}
+		}
 	}
 }

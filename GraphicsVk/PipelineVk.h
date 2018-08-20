@@ -13,11 +13,14 @@ namespace clannad
 		class Device;
 		class Pipeline
 		{
+		private:
+			VkViewport _viewport;
+			VkRect2D _scissor;
 		public:
 			Pipeline();
 			~Pipeline();
 		public:
-			static Pipeline* Create(Device* _host, ClVertexLayout _vertLayout);
+			static Pipeline* Create(Device* _host, const ClPipelineDesc& _pipelineDesc);
 		};
 
 	}

@@ -2,6 +2,7 @@
 #include "DeviceVk.h"
 #include "ViewVk.h"
 #include "TextureVk.h"
+#include "vkTypeMapping.h"
 #include <memory.h>
 
 namespace clannad

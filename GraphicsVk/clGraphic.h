@@ -352,8 +352,7 @@ namespace clannad
 	struct ClPipelineDesc
 	{
 		ClRenderState renderState;
-		//
-		ClVertexDesc vertexDesc;
+		ClVertexLayout vertexLayout;
 		const char * vertexShader;
 		const char * fragmentShader;
 		//

@@ -1,88 +1,12 @@
 #include "PipelineVk.h"
 #include "DeviceVk.h"
+#include "vkTypeMapping.h"
+
 
 namespace clannad
 {
 	namespace vulkan
 	{
-
-		VkFormat mappingVertexFormat(ClVertexFormat _format)
-		{
-			VkFormat formats[] =
-			{
-				VK_FORMAT_UNDEFINED,
-
-				VK_FORMAT_R8_UINT,
-				VK_FORMAT_R8G8_UINT,
-				VK_FORMAT_R8G8B8_UINT,
-				VK_FORMAT_R8G8B8A8_UINT,
-				VK_FORMAT_R8_SINT,
-				VK_FORMAT_R8G8B8A8_SINT,
-				VK_FORMAT_R8G8B8A8_SINT,
-				VK_FORMAT_R8G8B8A8_SINT,
-
-				VK_FORMAT_UNDEFINED,
-				VK_FORMAT_R8G8_UNORM,
-				VK_FORMAT_R8G8B8_UNORM,
-				VK_FORMAT_R8G8B8A8_UNORM,
-				VK_FORMAT_UNDEFINED,
-				VK_FORMAT_R8G8_SNORM,
-				VK_FORMAT_R8G8B8_SNORM,
-				VK_FORMAT_R8G8B8A8_SNORM,
-
-				//
-				VK_FORMAT_R16_UINT,
-				VK_FORMAT_R16G16_UINT,
-				VK_FORMAT_R16G16B16_UINT,
-				VK_FORMAT_R16G16B16A16_UINT,
-				VK_FORMAT_R16_SINT,
-				VK_FORMAT_R16G16B16A16_SINT,
-				VK_FORMAT_R16G16B16A16_SINT,
-				VK_FORMAT_R16G16B16A16_SINT,
-
-				VK_FORMAT_UNDEFINED,
-				VK_FORMAT_R16G16_UNORM,
-				VK_FORMAT_R16G16B16_UNORM,
-				VK_FORMAT_R16G16B16A16_UNORM,
-				VK_FORMAT_UNDEFINED,
-				VK_FORMAT_R16G16_SNORM,
-				VK_FORMAT_R16G16B16_SNORM,
-				VK_FORMAT_R16G16B16A16_SNORM,
-				//
-				VK_FORMAT_R32_UINT,
-				VK_FORMAT_R32G32_UINT,
-				VK_FORMAT_R32G32B32_UINT,
-				VK_FORMAT_R32G32B32A32_UINT,
-				VK_FORMAT_R32_SINT,
-				VK_FORMAT_R32G32B32A32_SINT,
-				VK_FORMAT_R32G32B32A32_SINT,
-				VK_FORMAT_R32G32B32A32_SINT,
-
-				VK_FORMAT_UNDEFINED,
-				VK_FORMAT_UNDEFINED,
-				VK_FORMAT_UNDEFINED,
-				VK_FORMAT_UNDEFINED,
-				VK_FORMAT_UNDEFINED,
-				VK_FORMAT_UNDEFINED,
-				VK_FORMAT_UNDEFINED,
-				VK_FORMAT_UNDEFINED,
-				//
-				VK_FORMAT_R32_SFLOAT,
-				VK_FORMAT_R32G32_SFLOAT,
-				VK_FORMAT_R32G32B32_SFLOAT,
-				VK_FORMAT_R32G32B32A32_SFLOAT,
-				//
-				VK_FORMAT_UNDEFINED,
-				VK_FORMAT_UNDEFINED,
-				VK_FORMAT_UNDEFINED,
-				VK_FORMAT_UNDEFINED,
-			};
-
-			static_assert(ClVertexFormatEnd == sizeof(formats) / sizeof(VkFormat), "");
-
-			return formats[_format];
-		}
-
 		Pipeline* Pipeline::Create(Device* _host, ClVertexLayout _vertLayout)
 		{
 			VkVertexInputBindingDescription vertexInputsDesc[ClVertexLayout::VERTEX_SUPPORT_MAX];
@@ -117,16 +41,22 @@ namespace clannad
 			inputAssemblyCreateInfo.pNext = nullptr;
 			inputAssemblyCreateInfo.primitiveRestartEnable = true;
 			inputAssemblyCreateInfo.topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
+
+			return nullptr;
+		}
+
+		Pipeline::Pipeline()
+		{
+		}
+
+
+		Pipeline::~Pipeline()
+		{
 		}
 	}
-}
 
-Pipeline::Pipeline()
-{
+
 }
 
 
-Pipeline::~Pipeline()
-{
-}
 

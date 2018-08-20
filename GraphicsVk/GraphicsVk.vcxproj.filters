@@ -36,6 +36,12 @@
     <ClInclude Include="FramebufferVk.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="PipelineVk.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="vkTypeMapping.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ViewVk.cpp">
@@ -51,6 +57,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="FramebufferVk.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="PipelineVk.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

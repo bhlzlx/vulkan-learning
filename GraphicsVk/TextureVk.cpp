@@ -2,6 +2,8 @@
 #include "DeviceVk.h"
 #include "ViewVk.h"
 #include "BufferVk.h"
+#include "vkTypeMapping.h"
+
 
 namespace clannad
 {
@@ -9,90 +11,10 @@ namespace clannad
 	{
 		const VkInstance& GetVkInstance();
 		//
-		VkFormat mappingFormat(ClPixelFormat _format)
-		{
-			VkFormat rst = VK_FORMAT_UNDEFINED;
-			switch (_format)
-			{
-			case ClPixelFormat_RGBA8888_UNORM: rst = VK_FORMAT_R8G8B8A8_UNORM; break;
-			case ClPixelFormat_RGBA8888_SNORM: rst = VK_FORMAT_R8G8B8A8_SNORM; break;
-			case ClPixelFormat_RGBA4444_UNORM_PACKED: rst = VK_FORMAT_R4G4B4A4_UNORM_PACK16; break;
-			case ClPixelFormat_RGB565_UNORM_PACKED: rst = VK_FORMAT_R5G6B5_UNORM_PACK16; break;
-			case ClPixelFormat_Depth32F: rst = VK_FORMAT_D32_SFLOAT; break;
-			case ClPixelFormat_Depth32Stencil8: rst = VK_FORMAT_D32_SFLOAT_S8_UINT; break;
-			case ClPixelFormat_Stencil8: rst = VK_FORMAT_S8_UINT; break;
-			case ClPixelFormat_Depth24Stencil8_PACKED: rst = VK_FORMAT_D24_UNORM_S8_UINT; break;
-				//
-			case ClPixelFormat_Depth_24F:
-			case ClPixelFormat_BGRA4444_SNORM_PACKED:
-			case ClPixelFormat_Invalid:
-			default:
-				break;
-			}
-			return rst;
-		}
-
-		uint32_t pixelSize(ClPixelFormat _format)
-		{
-			uint32_t sizeTable[] = {
-				0,
-				4,
-				4,
-				2,
-				2,
-				2,
-				3,
-				4,
-				1,
-				4,
-				5
-			};
-			return sizeTable[_format];
-		}
-
-		VkImageUsageFlags mappingImageUsage(uint8 _usage)
-		{
-			return (VkImageUsageFlags)_usage;
-		}
-
-		VkSamplerAddressMode mappingAddressMode(ClTextureAddress _mode)
-		{
-			switch (_mode)
-			{
-			case clannad::ClTextureAddressWrap:
-				return VkSamplerAddressMode::VK_SAMPLER_ADDRESS_MODE_REPEAT;
-			case clannad::ClTextureAddressMirror:
-				return VkSamplerAddressMode::VK_SAMPLER_ADDRESS_MODE_MIRRORED_REPEAT;
-			case clannad::ClTextureAddressClamp:
-				return VkSamplerAddressMode::VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
-			case clannad::ClTextureAddressClampOne:
-			case clannad::ClTextureAddressClampZero:
-				return VkSamplerAddressMode::VK_SAMPLER_ADDRESS_MODE_REPEAT;
-			default:
-				break;
-			}
-			return VkSamplerAddressMode::VK_SAMPLER_ADDRESS_MODE_REPEAT;
-		}
-
-		VkFilter mappingFilterMode(ClSamplerFilter _mode)
-		{
-			switch (_mode)
-			{
-			case clannad::ClFilterLinear:
-				return VkFilter::VK_FILTER_LINEAR;
-			case clannad::ClFilterPoint:
-				return VkFilter::VK_FILTER_NEAREST;
-			case clannad::ClFilerNone:
-				return VkFilter::VK_FILTER_NEAREST;
-			default:
-				break;
-			}
-			return VkFilter::VK_FILTER_NEAREST;
-		}
 
 		void Texture2D::subImage(void * _data, const ClRect<uint32_t>& _rect)
 		{
-			Buffer * buffer = Buffer::CreateStorageBuffer(_host, pixelSize(_desc.format) * (_rect.right - _rect.left) * (_rect.top - _rect.bottom));
+			Buffer * buffer = Buffer::CreateStorageBuffer(_host, mappingPixelSize(_desc.format) * (_rect.right - _rect.left) * (_rect.top - _rect.bottom));
 			DataBlitManager::Instance()->blockedCopyToImage(_host, buffer, 0, buffer->size(), this, _rect);
 		}
 
@@ -121,7 +43,7 @@ namespace clannad
 				nullptr,
 				0, // not a cube map 	VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT
 				VK_IMAGE_TYPE_2D,
-				mappingFormat(_desc.format), // 格式
+				mappingPixelFormat(_desc.format), // 格式
 				{ _desc.width, _desc.height, 1 }, // 大小
 				0, // mipmap
 				1, // 有几层？
@@ -174,7 +96,7 @@ namespace clannad
 
 			createInfo.pNext = nullptr;
 			createInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
-			createInfo.format = mappingFormat(_desc.format);
+			createInfo.format = mappingPixelFormat(_desc.format);
 			createInfo.flags = mappingImageUsage(_desc.usage);
 
 			VkImageView imageView;

@@ -46,7 +46,7 @@ namespace clannad
 			return VK_ATTACHMENT_STORE_OP_DONT_CARE;
 		}
 
-		VkFormat mappingFormat(ClPixelFormat _format);
+		VkFormat mappingPixelFormat(ClPixelFormat _format);
 
 		
 

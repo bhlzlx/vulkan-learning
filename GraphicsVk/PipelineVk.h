@@ -10,7 +10,7 @@ namespace clannad
 {
 	namespace vulkan
 	{
-
+		class Device;
 		class Pipeline
 		{
 		public:

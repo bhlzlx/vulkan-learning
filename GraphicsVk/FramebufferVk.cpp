@@ -1,6 +1,7 @@
 #include "FramebufferVk.h"
 #include "DeviceVk.h"
 #include "TextureVk.h"
+#include "vkTypeMapping.h"
 #include "VkApi.h"
 
 namespace clannad
@@ -34,11 +35,11 @@ namespace clannad
 
 			for (attachmentIndex = 0; attachmentIndex < _attachmentDesc.colorAttachmentCount; ++attachmentIndex)
 			{
-				attachmentStruct.attachments[attachmentIndex].format = mappingFormat(_attachmentDesc.colorAttachments[attachmentIndex]);
+				attachmentStruct.attachments[attachmentIndex].format = mappingPixelFormat(_attachmentDesc.colorAttachments[attachmentIndex]);
 			}
 			if (_attachmentDesc.depthStencilAttachment)
 			{
-				attachmentStruct.attachments[attachmentIndex].format = mappingFormat(_attachmentDesc.depthStencilAttachment);
+				attachmentStruct.attachments[attachmentIndex].format = mappingPixelFormat(_attachmentDesc.depthStencilAttachment);
 				//
 				attachmentStruct.references[attachmentIndex].attachment = attachmentIndex;
 				attachmentStruct.references[attachmentIndex].layout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;

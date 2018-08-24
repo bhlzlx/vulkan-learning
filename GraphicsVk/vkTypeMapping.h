@@ -224,5 +224,70 @@ namespace clannad
 				return VK_COMPARE_OP_ALWAYS;
 			}
 		}
+
+		inline VkStencilOp mappingStencilOp(ClStencilOperator _oper)
+		{
+			switch (_oper)
+			{
+			case clannad::ClStencilOpKeep:
+				return VK_STENCIL_OP_KEEP;
+			case clannad::ClStencilOpZero:
+				return VK_STENCIL_OP_ZERO;
+			case clannad::ClStencilOpReplace:
+				return VK_STENCIL_OP_REPLACE;
+			case clannad::ClStencilOpInc:
+				return VK_STENCIL_OP_INCREMENT_AND_WRAP;
+			case clannad::ClStencilOpDec:
+				return VK_STENCIL_OP_DECREMENT_AND_WRAP;
+			case clannad::ClStencilInvert:
+				return VK_STENCIL_OP_INVERT;
+			default:
+			}
+			return VK_STENCIL_OP_KEEP;
+		}
+
+		inline VkBlendFactor mappingBlendFactor(ClBlendFactor _factor)
+		{
+			switch (_factor)
+			{
+			case clannad::ClBlendFactorZero: return VK_BLEND_FACTOR_ZERO;
+			case clannad::ClBlendFactorOne: return VK_BLEND_FACTOR_ONE;
+			case clannad::ClBlendFactorSourceColor: return VK_BLEND_FACTOR_SRC_COLOR;
+			case clannad::ClBlendFactorSourceAlpha: return VK_BLEND_FACTOR_SRC_ALPHA;
+			case clannad::ClBlendFactorDestinationColor: return VK_BLEND_FACTOR_DST_COLOR;
+			case clannad::ClBlendFactorDestinationAlpha: return VK_BLEND_FACTOR_DST_ALPHA;
+			case clannad::ClBlendFactorOneMinusSourceColor: return VK_BLEND_FACTOR_ONE_MINUS_SRC_COLOR;
+			case clannad::ClBlendFactorOneMinusSourceAlpha: return VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
+			case clannad::ClBlendFactorOneMinusDestinationColor: return VK_BLEND_FACTOR_ONE_MINUS_DST_COLOR;
+			case clannad::ClBlendFactorOneMinusDestinationAlpha: return VK_BLEND_FACTOR_DST_ALPHA;
+			case clannad::ClBlendFactorSourceAlphaMinor: return VK_BLEND_FACTOR_SRC_ALPHA_SATURATE;
+			case clannad::ClBlendFactorColor: return VK_BLEND_FACTOR_CONSTANT_COLOR;
+			case clannad::ClBlendFactorOneMinusColor: return VK_BLEND_FACTOR_ONE_MINUS_CONSTANT_COLOR;
+			case clannad::ClBlendFactorAlpha: return VK_BLEND_FACTOR_CONSTANT_ALPHA;
+			case clannad::ClBlendFactorOneMinusAlpha: VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
+			case clannad::ClBlendFactorSource1Color: VK_BLEND_FACTOR_SRC1_COLOR;
+			case clannad::ClBlendFactorOneMinusSource1Color: VK_BLEND_FACTOR_ONE_MINUS_SRC1_COLOR;
+			case clannad::ClBlendFactorSource1Alpha: VK_BLEND_FACTOR_SRC1_ALPHA;
+			case clannad::ClBlendFactorOneMinusSource1Alpha: VK_BLEND_FACTOR_ONE_MINUS_SRC1_ALPHA;
+			default:
+				break;
+			}
+			return VK_BLEND_FACTOR_MAX_ENUM;
+		}
+
+		inline VkBlendOp mappingBlendOp(ClBlendOperation _op)
+		{
+			switch (_op)
+			{
+			case clannad::ClBlendOperationAdd: return VK_BLEND_OP_ADD;
+			case clannad::ClBlendOperationSubtract: return VK_BLEND_OP_SUBTRACT;
+			case clannad::ClBlendOperationReverseSubtract: return VK_BLEND_OP_REVERSE_SUBTRACT;
+			case clannad::ClBlendOperationMin: return VK_BLEND_OP_MIN;
+			case clannad::ClBlendOperationMax: return VK_BLEND_OP_MAX;
+			default:
+				break;
+			}
+			return VK_BLEND_OP_MAX_ENUM;
+		}
 	}
 }

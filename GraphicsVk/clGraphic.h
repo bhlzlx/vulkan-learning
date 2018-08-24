@@ -253,6 +253,8 @@ namespace clannad
 		ClStoreActionDontCare
 	};
 
+	enum ClT
+
 	struct ClTextureDesc
 	{
 		uint16 width = 0;
@@ -337,7 +339,6 @@ namespace clannad
 
 	struct ClRenderState
 	{
-		ClPolygonMode polygonMode = ClPolygonModeFill;
 		ClCullMode cullMode = ClCullNone;
 		ClWindingMode winding = ClWindingCW;
 		ClWriteMask writeMask = ClWriteMaskAll;
@@ -349,9 +350,35 @@ namespace clannad
 		ClBlendState blendState;
 	};
 
+	enum ClTopology
+	{
+		ClTopologyPointList = 0,
+		ClTopologyLineList,
+		ClTopologyLineStrip,
+		ClTopologyTriangleList,
+		ClTopologyTriangleStrip,
+		ClTopologyTriangleFan,
+	};
+
+	enum ClFrontFace
+	{
+		ClClockwise,
+		ClCounterClockwise,
+	};
+
+	struct ClDrawMode
+	{
+		bool primitiveRestart = false;
+		ClTopology topology = ClTopologyTriangleList;
+		//
+		ClPolygonMode polygonMode = ClPolygonModeFill;
+		ClFrontFace frontFace = ClClockwise;
+	};
+
 	struct ClPipelineDesc
 	{
 		ClRenderState renderState;
+		ClDrawMode drawMode;
 		ClVertexLayout vertexLayout;
 		const char * vertexShader;
 		const char * fragmentShader;

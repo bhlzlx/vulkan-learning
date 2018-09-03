@@ -4,7 +4,7 @@
 	#define VK_NO_PROTOTYPES
 	#define VK_USE_PLATFORM_WIN32_KHR
 #endif
-#include "vulkan/vulkan.h"
+#include <vulkan/vulkan.h>
 
 #define VULKAN_EXPORT_API( api ) static PFN_##api api;
 #define VULKAN_GLOBAL_API( api ) static PFN_##api api;

@@ -79,6 +79,7 @@ namespace clannad
 			{
 				return true;
 			}
+			return false;
 		}
 
 		void Buffer::unmap( size_t _offset, size_t _size)

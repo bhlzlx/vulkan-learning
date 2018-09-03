@@ -56,7 +56,7 @@ namespace clannad
 			ClAttachmentDesc _attachmentDesc;
 			//
 			VkFramebuffer _id;
-			VkRenderPass _renderPass = nullptr;
+			VkRenderPass _renderPass = 0;
 			//
 			Texture2D* _colorAttachments[ClAttachmentDesc::COLOR_ATTACHMENT_MAX] = { nullptr };
 			Texture2D* _depthStencilAttachment = nullptr;

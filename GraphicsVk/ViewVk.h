@@ -18,12 +18,14 @@ namespace clannad
 		private:
 			Device * _host;
 			//
-			VkSurfaceKHR _surface = nullptr;
-			VkSwapchainKHR _swapchain = nullptr;
+			VkSurfaceKHR _surface = 0;
+			VkSwapchainKHR _swapchain = 0;
 			VkQueue _presentQueue;
 			VkQueue _graphicQueue;
 			VkSwapchainCreateInfoKHR _swapchainCreateInfo;
 			std::vector<VkImage> _vecImages;
+
+			std::vector<VkSemaphore> _imageAvailSemaphoes;
 
 			VkSemaphore _imageAvail;
 			VkSemaphore _cmdExecuted;

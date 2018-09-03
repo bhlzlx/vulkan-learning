@@ -253,8 +253,6 @@ namespace clannad
 		ClStoreActionDontCare
 	};
 
-	enum ClT
-
 	struct ClTextureDesc
 	{
 		uint16 width = 0;

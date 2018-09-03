@@ -242,6 +242,7 @@ namespace clannad
 			case clannad::ClStencilInvert:
 				return VK_STENCIL_OP_INVERT;
 			default:
+				break;
 			}
 			return VK_STENCIL_OP_KEEP;
 		}

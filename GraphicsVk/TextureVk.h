@@ -24,13 +24,13 @@ namespace clannad
 		class Texture2D
 		{
 		private:
-			VkImage _id = nullptr;
-			VkImageView _imageView = nullptr;
+			VkImage _id = 0;
+			VkImageView _imageView = 0;
 			VkDeviceMemory _memory;
 			Device* _host = nullptr;
 			ClTextureDesc _desc;
 			//
-			Texture2D():_id(nullptr)
+			Texture2D():_id(0)
 			{
 			}
 			~Texture2D()
@@ -67,8 +67,8 @@ namespace clannad
 		class Sampler2D
 		{
 		private:
-			VkSampler _id = nullptr;
-			Device* _host = nullptr;
+			VkSampler _id = 0;
+			Device* _host = 0;
 			//
 			ClSamplerDesc _desc;
 		private:

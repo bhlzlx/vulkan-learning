@@ -181,6 +181,3 @@ namespace clannad
 	
 
 }
-
-
-
